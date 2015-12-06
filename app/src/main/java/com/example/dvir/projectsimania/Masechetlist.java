@@ -21,11 +21,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.regex.Pattern;
 
 public class Masechetlist extends AppCompatActivity {
     protected Button button;
     protected ListView listView;
+    protected ListView listV; //For sub text
     protected ArrayList<String> list;
+    protected ArrayList<Bookmark> arrayBookmarks; //For sub text
     protected ArrayAdapter<String> adapter;
     public final static String EXTRA_MASSECHET = "com.example.dvir.MASSECHET";
 
@@ -38,11 +41,27 @@ public class Masechetlist extends AppCompatActivity {
 
         button = (Button) findViewById(R.id.button);
 
-        listView = (ListView) findViewById(R.id.listView);
-        String[] masechet = {"Sanhedrin", "BaBa Meziha", "Makot"};
-        list = new ArrayList<>(Arrays.asList(masechet));
-        adapter = new ArrayAdapter<String>(this, R.layout.list_items,R.id.txtitem,list);
-        listView.setAdapter(adapter);
+
+            arrayBookmarks = new ArrayList<Bookmark>();
+
+//            Bookmark person1 = new Bookmark("Alex", 1);
+//            Bookmark person2 = new Bookmark("Laura", 3);
+//            Bookmark person3 = new Bookmark("John", 2);
+//            Bookmark person4 = new Bookmark("Tom", 5);
+//
+//            arrayBookmarks.add(person1);
+//            arrayBookmarks.add(person2);
+//            arrayBookmarks.add(person3);
+//            arrayBookmarks.add(person4);
+
+            listV = (ListView) findViewById(R.id.listView);
+            ListBookmarkAdapter adapter = new ListBookmarkAdapter(this, arrayBookmarks);
+            listV.setAdapter(adapter);
+//        listView = (ListView) findViewById(R.id.listView);
+//        String[] masechet = {"Sanhedrin", "BaBa Meziha", "Makot"};
+//        list = new ArrayList<>(Arrays.asList(masechet));
+//        adapter = new ArrayAdapter<String>(this, R.layout.list_items,R.id.txtitem,list);
+//        listView.setAdapter(adapter);
 
 
 
@@ -91,10 +110,32 @@ public class Masechetlist extends AppCompatActivity {
             case (1):{
                 if (resultCode == SetNewBookmark.RESULT_OK){
                     String txt = data.getStringExtra(EXTRA_MASSECHET);
-                    list.add(txt);
+                    String[] res = txt.split(Pattern.quote("|"));
+                    Bookmark newBookmark = new Bookmark(res[0],Integer.valueOf(res[1]));
+                    arrayBookmarks.add(newBookmark);
                     }
                 }
             }
         }
+    private void populateListView() {
+
+        ArrayList<Bookmark> arrayPeople = new ArrayList<Bookmark>();
+
+        Bookmark person1 = new Bookmark("Alex", 1);
+        Bookmark person2 = new Bookmark("Laura", 3);
+        Bookmark person3 = new Bookmark("John", 2);
+        Bookmark person4 = new Bookmark("Tom", 5);
+
+        arrayPeople.add(person1);
+        arrayPeople.add(person2);
+        arrayPeople.add(person3);
+        arrayPeople.add(person4);
+
+        ListView listV = (ListView) findViewById(R.id.listView);
+        ListBookmarkAdapter adapter = new ListBookmarkAdapter(this, arrayPeople);
+        listV.setAdapter(adapter);
+
+
+    }
     }
 
