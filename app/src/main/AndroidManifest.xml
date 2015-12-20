@@ -3,12 +3,14 @@
     package="com.example.dvir.projectsimania" >
 
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
+            android:configChanges="orientation"
             android:name=".Masechetlist"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >

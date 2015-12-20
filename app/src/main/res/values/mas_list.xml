@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="masechtot">
+        <item>ברכות</item>
+        <item>שבת</item>
+        <item>פסחים</item>
+        <item>ראש-השנה</item>
+        <item>יומא</item>
+        <item>סוכה</item>
+        <item>ביצה</item>
+        <item>תענית</item>
+        <item>מגילה</item>
+        <item>מועד-קטן</item>
+        <item>חגיגה</item>
+        <item>יבמות</item>
+        <item>כתובות</item>
+        <item>נדרים</item>
+        <item>נזיר</item>
+        <item>סוטה</item>
+        <item>גיטין</item>
+        <item>קידושין</item>
+        <item>בבא-קמא</item>
+        <item>בבא-מציעא</item>
+        <item>בבא-בתרא</item>
+        <item>סנהדרין</item>
+        <item>מכות</item>
+        <item>שבועות</item>
+        <item>עבודה-זרה</item>
+        <item>הוריות</item>
+        <item>זבחים</item>
+        <item>מנחות</item>
+        <item>חולין</item>
+        <item>בכורות</item>
+        <item>ערכין</item>
+        <item>תמורה</item>
+        <item>כריתות</item>
+        <item>מעילה</item>
+        <item>תמיד</item>
+        <item>נידה</item>
+    </string-array>
+</resources>

@@ -25,11 +25,12 @@ import java.util.regex.Pattern;
 
 public class Masechetlist extends AppCompatActivity {
     protected Button button;
-    protected ListView listView;
+    //protected ListView listView;
     protected ListView listV; //For sub text
-    protected ArrayList<String> list;
+    //protected ArrayList<String> list;
     protected ArrayList<Bookmark> arrayBookmarks; //For sub text
-    protected ArrayAdapter<String> adapter;
+    //protected ArrayAdapter<String> adapter;
+    protected ListBookmarkAdapter listBookmarkAdapter;
     public final static String EXTRA_MASSECHET = "com.example.dvir.MASSECHET";
 
     @Override
@@ -38,63 +39,30 @@ public class Masechetlist extends AppCompatActivity {
         setContentView(R.layout.activity_masechetlist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         button = (Button) findViewById(R.id.button);
+        listV = (ListView) findViewById(R.id.listView);
 
-
-            arrayBookmarks = new ArrayList<Bookmark>();
-
-//            Bookmark person1 = new Bookmark("Alex", 1);
-//            Bookmark person2 = new Bookmark("Laura", 3);
-//            Bookmark person3 = new Bookmark("John", 2);
-//            Bookmark person4 = new Bookmark("Tom", 5);
-//
-//            arrayBookmarks.add(person1);
-//            arrayBookmarks.add(person2);
-//            arrayBookmarks.add(person3);
-//            arrayBookmarks.add(person4);
-
-            listV = (ListView) findViewById(R.id.listView);
-            ListBookmarkAdapter adapter = new ListBookmarkAdapter(this, arrayBookmarks);
-            listV.setAdapter(adapter);
-//        listView = (ListView) findViewById(R.id.listView);
-//        String[] masechet = {"Sanhedrin", "BaBa Meziha", "Makot"};
-//        list = new ArrayList<>(Arrays.asList(masechet));
-//        adapter = new ArrayAdapter<String>(this, R.layout.list_items,R.id.txtitem,list);
-//        listView.setAdapter(adapter);
-
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        if (savedInstanceState != null) {
+            String[] values = savedInstanceState.getStringArray("myKey");
+            if (values != null) {
+                arrayBookmarks = ListBookmarkAdapter.bmListFromArray(values);
+                listBookmarkAdapter = new ListBookmarkAdapter(this, arrayBookmarks);
             }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_masechetlist, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        } else {
+            arrayBookmarks = new ArrayList<Bookmark>();
+            listBookmarkAdapter = new ListBookmarkAdapter(this, arrayBookmarks);
         }
 
-        return super.onOptionsItemSelected(item);
+        listV.setAdapter(listBookmarkAdapter);
+    }
+
+    public void onSaveInstanceState(Bundle savedState) {
+
+        super.onSaveInstanceState(savedState);
+
+        // Note: getValues() is a method in your ArrayAdaptor subclass
+        String[] values = listBookmarkAdapter.getValues();
+        savedState.putStringArray("myKey", values);
     }
 
 
@@ -106,17 +74,19 @@ public class Masechetlist extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case (1):{
-                if (resultCode == SetNewBookmark.RESULT_OK){
+        switch (requestCode) {
+            case (1): {
+                if (resultCode == SetNewBookmark.RESULT_OK) {
                     String txt = data.getStringExtra(EXTRA_MASSECHET);
                     String[] res = txt.split(Pattern.quote("|"));
-                    Bookmark newBookmark = new Bookmark(res[0],Integer.valueOf(res[1]));
+                    Bookmark newBookmark = new Bookmark(res[0], Integer.valueOf(res[1]));
                     arrayBookmarks.add(newBookmark);
-                    }
+                    listBookmarkAdapter.notifyDataSetChanged(); //remember: this fixed the problem that the listview wasn't updating
                 }
             }
         }
+    }
+
     private void populateListView() {
 
         ArrayList<Bookmark> arrayPeople = new ArrayList<Bookmark>();
@@ -134,8 +104,6 @@ public class Masechetlist extends AppCompatActivity {
         ListView listV = (ListView) findViewById(R.id.listView);
         ListBookmarkAdapter adapter = new ListBookmarkAdapter(this, arrayPeople);
         listV.setAdapter(adapter);
-
-
     }
-    }
+}
 

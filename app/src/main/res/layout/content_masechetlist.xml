@@ -22,13 +22,14 @@
             android:layout_height="0dp"
             android:id="@+id/listView"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.60" />
+            android:layout_weight="0.83"
+            android:background="#ff801e" />
 
         <Button
             android:onClick="setBookmark"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="New Button"
+            android:text="הוסף סימנייה"
             android:id="@+id/button" />
     </LinearLayout>
 </RelativeLayout>
