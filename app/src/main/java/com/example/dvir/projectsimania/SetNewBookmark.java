@@ -1,8 +1,8 @@
 package com.example.dvir.projectsimania;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,11 +17,9 @@ public class SetNewBookmark extends AppCompatActivity {
     private Spinner spinnerP;
     protected Button button;
     protected Intent resultIntent;
-    protected EditText putExtra2;
     protected String data;
-    protected ArrayList<Integer> arrayList;
-    protected ArrayAdapter<Integer> ArrayAdapter;
-    protected EditText putExtra1;
+    protected ArrayList<String> arrayList;
+    protected ArrayAdapter<String> ArrayAdapter;
     public final static String EXTRA_MASSECHET = "com.example.dvir.MASSECHET";
     @Override
 
@@ -33,7 +31,7 @@ public class SetNewBookmark extends AppCompatActivity {
         spinnerM = (Spinner) findViewById(R.id.spinner);
         spinnerP = (Spinner) findViewById(R.id.spinner2);
         arrayList = Utils.getSheetList(spinnerM.getSelectedItem().toString());
-        ArrayAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_dropdown_item, arrayList);
+        ArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, arrayList);
 
         spinnerP.setAdapter(ArrayAdapter);
 
@@ -42,7 +40,7 @@ public class SetNewBookmark extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 arrayList = Utils.getSheetList(spinnerM.getSelectedItem().toString());
-                ArrayAdapter = new ArrayAdapter<Integer>(SetNewBookmark.this, android.R.layout.simple_spinner_dropdown_item, arrayList);
+                ArrayAdapter = new ArrayAdapter<String>(SetNewBookmark.this, android.R.layout.simple_spinner_dropdown_item, arrayList);
                 spinnerP.setAdapter(ArrayAdapter);
             }
 
@@ -51,7 +49,6 @@ public class SetNewBookmark extends AppCompatActivity {
                 spinnerP.setSelection(0);
             }
         });
-
     }
 
     public void setBookmark(View view){

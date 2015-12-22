@@ -5,19 +5,18 @@ package com.example.dvir.projectsimania;
  */
 public class Bookmark {
     private String masechet;
-    private int page;
+    private String page;
     private int line;
 
     public Bookmark(){}
 
-    public Bookmark(String _masechet, int _page){
+    public Bookmark(String _masechet, String _page) {
         this.masechet = _masechet;
         this.page = _page;
         this.line = 0;
     }
 
-    public Bookmark(String _masechet, int _page,int _line)
-    {
+    public Bookmark(String _masechet, String _page, int _line) {
         this.masechet = _masechet;
         this.page = _page;
         this.line = _line;
@@ -28,7 +27,7 @@ public class Bookmark {
         return masechet;
     }
 
-    public int getPage()
+    public String getPage()
     {
         return page;
     }
@@ -43,9 +42,9 @@ public class Bookmark {
         this.masechet = masechet;
     }
 
-    public void setStrikes (int strikes)
+    public void setPage(String page)
     {
-        this.page = strikes;
+        this.page = page;
     }
 }
 

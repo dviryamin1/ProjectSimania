@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,14 +25,12 @@ import java.util.ListIterator;
 import java.util.regex.Pattern;
 
 public class Masechetlist extends AppCompatActivity {
-    protected Button button;
-    //protected ListView listView;
-    protected ListView listV; //For sub text
-    //protected ArrayList<String> list;
-    protected ArrayList<Bookmark> arrayBookmarks; //For sub text
-    //protected ArrayAdapter<String> adapter;
-    protected ListBookmarkAdapter listBookmarkAdapter;
     public final static String EXTRA_MASSECHET = "com.example.dvir.MASSECHET";
+    public final static String EXTRA_CHANGE_BOOKMARK = "com.example.dvir.CHANGE_BOOKMARK_MASSECHET";
+    protected Button button;
+    protected ListView listV; //For sub text
+    protected ArrayList<Bookmark> arrayBookmarks; //For sub text
+    protected ListBookmarkAdapter listBookmarkAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +53,15 @@ public class Masechetlist extends AppCompatActivity {
         }
 
         listV.setAdapter(listBookmarkAdapter);
+
+        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Masechetlist.this, ChangeBookmark.class);
+                intent.putExtra(EXTRA_CHANGE_BOOKMARK, listBookmarkAdapter.getItem(position).getMasechet() + "|" + listBookmarkAdapter.getItem(position).getPage() + "|" + position);
+                startActivityForResult(intent, 2);
+            }
+        });
     }
 
     public void onSaveInstanceState(Bundle savedState) {
@@ -65,7 +73,6 @@ public class Masechetlist extends AppCompatActivity {
         savedState.putStringArray("myKey", values);
     }
 
-
     public void setBookmark(View view) {
         Intent intent = new Intent(this, SetNewBookmark.class);
         startActivityForResult(intent, 1);
@@ -74,36 +81,42 @@ public class Masechetlist extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case (1): {
-                if (resultCode == SetNewBookmark.RESULT_OK) {
-                    String txt = data.getStringExtra(EXTRA_MASSECHET);
-                    String[] res = txt.split(Pattern.quote("|"));
-                    Bookmark newBookmark = new Bookmark(res[0], Integer.valueOf(res[1]));
-                    arrayBookmarks.add(newBookmark);
-                    listBookmarkAdapter.notifyDataSetChanged(); //remember: this fixed the problem that the listview wasn't updating
-                }
+        if (requestCode == 1) {
+            if (resultCode == SetNewBookmark.RESULT_OK) {
+                String txt = data.getStringExtra(EXTRA_MASSECHET);
+                String[] res = txt.split(Pattern.quote("|"));
+                Bookmark newBookmark = new Bookmark(res[0], res[1]);
+                arrayBookmarks.add(newBookmark);
+                listBookmarkAdapter.notifyDataSetChanged(); //remember: this fixed the problem that the listview wasn't updating
+            }
+        } else if (requestCode == 2) {
+            if (resultCode == SetNewBookmark.RESULT_OK) {
+                String txt = data.getStringExtra(EXTRA_CHANGE_BOOKMARK);
+                String[] res = txt.split(Pattern.quote("|"));
+                arrayBookmarks.get(Integer.parseInt(res[1])).setPage(res[0]);
+                listBookmarkAdapter.notifyDataSetChanged();
             }
         }
     }
 
-    private void populateListView() {
 
-        ArrayList<Bookmark> arrayPeople = new ArrayList<Bookmark>();
-
-        Bookmark person1 = new Bookmark("Alex", 1);
-        Bookmark person2 = new Bookmark("Laura", 3);
-        Bookmark person3 = new Bookmark("John", 2);
-        Bookmark person4 = new Bookmark("Tom", 5);
-
-        arrayPeople.add(person1);
-        arrayPeople.add(person2);
-        arrayPeople.add(person3);
-        arrayPeople.add(person4);
-
-        ListView listV = (ListView) findViewById(R.id.listView);
-        ListBookmarkAdapter adapter = new ListBookmarkAdapter(this, arrayPeople);
-        listV.setAdapter(adapter);
-    }
+//    private void populateListView() {
+//
+//        ArrayList<Bookmark> arrayPeople = new ArrayList<Bookmark>();
+//
+//        Bookmark person1 = new Bookmark("Alex", 1);
+//        Bookmark person2 = new Bookmark("Laura", 3);
+//        Bookmark person3 = new Bookmark("John", 2);
+//        Bookmark person4 = new Bookmark("Tom", 5);
+//
+//        arrayPeople.add(person1);
+//        arrayPeople.add(person2);
+//        arrayPeople.add(person3);
+//        arrayPeople.add(person4);
+//
+//        ListView listV = (ListView) findViewById(R.id.listView);
+//        ListBookmarkAdapter adapter = new ListBookmarkAdapter(this, arrayPeople);
+//        listV.setAdapter(adapter);
+//    }
 }
 

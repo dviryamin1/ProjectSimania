@@ -14,43 +14,70 @@
         android:text="מסכת"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentEnd="true" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
         android:entries="@array/masechtot"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentEnd="true"
-        android:background="#ff801e" />
+        android:layout_toStartOf="@+id/button2"
+        android:textAlignment="textEnd" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="הוסף סימנייה"
         android:id="@+id/button2"
         android:onClick="setBookmark"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        style="@android:style/TextAppearance.Holo" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinner2"
-        android:layout_above="@+id/button2"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:background="#ff801e" />
+        android:layout_toStartOf="@+id/button2"
+        android:textAlignment="textStart" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:text="דף"
         android:id="@+id/textView2"
-        android:layout_above="@+id/spinner2"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/spinner"
+        android:layout_alignEnd="@+id/textView" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button2">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="עא"
+            android:id="@+id/radioButton2"
+            android:layout_below="@+id/button2"
+            android:layout_alignParentStart="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="עב"
+            android:id="@+id/radioButton"
+            android:checked="false"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/radioButton2"
+            android:layout_alignParentLeft="true" />
+    </RadioGroup>
 
 </RelativeLayout>

@@ -2,4 +2,6 @@
     <string name="app_name">ProjectSimania</string>
     <string name="action_settings">Settings</string>
     <string name="name">Settings</string>
+    <string name="pageA">עא</string>
+    <string name="pageB">עב</string>
 </resources>

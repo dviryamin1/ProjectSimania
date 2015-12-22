@@ -34,16 +34,12 @@ public class ListBookmarkAdapter extends BaseAdapter {
         this.context = context;
     }
 
-//    public ListBookmarkAdapter(Context context, String[] listMasechet){
-//    this.listMasechet = Arrays.asList(listMasechet)
-//    }
-
     public static ArrayList<Bookmark> bmListFromArray(String[] bmArr) {
         ArrayList<Bookmark> list = new ArrayList<Bookmark>();
         String[] res;
         for (int i = 0; i < bmArr.length; i++) {
             res = bmArr[i].split(Pattern.quote("|"));
-            list.add(new Bookmark(res[0], Integer.valueOf(res[1])));
+            list.add(new Bookmark(res[0], res[1]));
         }
         return list;
     }
