@@ -39,10 +39,11 @@ public class ListBookmarkAdapter extends BaseAdapter {
         String[] res;
         for (int i = 0; i < bmArr.length; i++) {
             res = bmArr[i].split(Pattern.quote("|"));
-            list.add(new Bookmark(res[0], res[1]));
+            list.add(new Bookmark(res[0], res[1], res[2]));
         }
         return list;
     }
+
     public int getCount() {
         return listMasechet.size();
     }
@@ -51,7 +52,7 @@ public class ListBookmarkAdapter extends BaseAdapter {
         ArrayList<String> values = new ArrayList<String>();
 
         for (int i = 0; i < this.getCount(); i++) {
-            values.add(listMasechet.get(i).getMasechet() + "|" + listMasechet.get(i).getPage());
+            values.add(listMasechet.get(i).getMasechet() + "|" + listMasechet.get(i).getMasechet() + "|" + listMasechet.get(i).getPage());
         }
         String[] array = values.toArray(new String[values.size()]);
         return array;
@@ -86,8 +87,8 @@ public class ListBookmarkAdapter extends BaseAdapter {
         }
 
         Bookmark bookmark = listMasechet.get(position);
-        holder.txtName.setText(bookmark.getMasechet());
-        holder.txtStrikes.setText("" + bookmark.getPage()); //using ("" +) instead of .toString()
+        holder.txtName.setText(bookmark.getLabel());
+        holder.txtStrikes.setText(bookmark.getMasechet() + " " + bookmark.getPage()); //using ("" +) instead of .toString()
 
         return convertView;
     }

@@ -2,6 +2,7 @@ package com.example.dvir.projectsimania;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,7 +16,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,6 +38,7 @@ import java.util.regex.Pattern;
 public class Masechetlist extends AppCompatActivity {
     public final static String EXTRA_MASSECHET = "com.example.dvir.MASSECHET";
     public final static String EXTRA_CHANGE_BOOKMARK = "com.example.dvir.CHANGE_BOOKMARK_MASSECHET";
+    private final static String STORETEXT = "Saved_List2.txt";
     protected Button button;
     protected ListView listV; //For sub text
     protected ArrayList<Bookmark> arrayBookmarks; //For sub text
@@ -38,30 +50,37 @@ public class Masechetlist extends AppCompatActivity {
         setContentView(R.layout.activity_masechetlist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         button = (Button) findViewById(R.id.button);
         listV = (ListView) findViewById(R.id.listView);
+
+        try {
+            arrayBookmarks = stringToArrayList(readFileInEditor());
+        } catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+        }
 
         if (savedInstanceState != null) {
             String[] values = savedInstanceState.getStringArray("myKey");
             if (values != null) {
                 arrayBookmarks = ListBookmarkAdapter.bmListFromArray(values);
-                listBookmarkAdapter = new ListBookmarkAdapter(this, arrayBookmarks);
             }
-        } else {
+        } else if (arrayBookmarks == null) {
             arrayBookmarks = new ArrayList<Bookmark>();
-            listBookmarkAdapter = new ListBookmarkAdapter(this, arrayBookmarks);
         }
 
+        listBookmarkAdapter = new ListBookmarkAdapter(this, arrayBookmarks);
         listV.setAdapter(listBookmarkAdapter);
 
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(Masechetlist.this, ChangeBookmark.class);
-                intent.putExtra(EXTRA_CHANGE_BOOKMARK, listBookmarkAdapter.getItem(position).getMasechet() + "|" + listBookmarkAdapter.getItem(position).getPage() + "|" + position);
+                intent.putExtra(EXTRA_CHANGE_BOOKMARK, listBookmarkAdapter.getItem(position).getLabel() + "|" + listBookmarkAdapter.getItem(position).getMasechet() + "|" + listBookmarkAdapter.getItem(position).getPage() + "|" + position);
                 startActivityForResult(intent, 2);
             }
         });
+        listBookmarkAdapter.notifyDataSetChanged();
     }
 
     public void onSaveInstanceState(Bundle savedState) {
@@ -85,7 +104,7 @@ public class Masechetlist extends AppCompatActivity {
             if (resultCode == SetNewBookmark.RESULT_OK) {
                 String txt = data.getStringExtra(EXTRA_MASSECHET);
                 String[] res = txt.split(Pattern.quote("|"));
-                Bookmark newBookmark = new Bookmark(res[0], res[1]);
+                Bookmark newBookmark = new Bookmark(res[0], res[1], res[2]);
                 arrayBookmarks.add(newBookmark);
                 listBookmarkAdapter.notifyDataSetChanged(); //remember: this fixed the problem that the listview wasn't updating
             }
@@ -93,30 +112,99 @@ public class Masechetlist extends AppCompatActivity {
             if (resultCode == SetNewBookmark.RESULT_OK) {
                 String txt = data.getStringExtra(EXTRA_CHANGE_BOOKMARK);
                 String[] res = txt.split(Pattern.quote("|"));
-                arrayBookmarks.get(Integer.parseInt(res[1])).setPage(res[0]);
-                listBookmarkAdapter.notifyDataSetChanged();
+                if (res[res.length - 1].equals("ADD")) {
+                    arrayBookmarks.get(Integer.parseInt(res[1])).setPage(res[0]);
+                    arrayBookmarks.get(Integer.parseInt(res[1])).setLabel(res[2]);
+                    listBookmarkAdapter.notifyDataSetChanged();
+                } else if (res[res.length - 1].equals("DEL")) {
+                    arrayBookmarks.remove(Integer.parseInt(res[0]));
+                    listBookmarkAdapter.notifyDataSetChanged();
+                }
             }
         }
     }
 
-
-//    private void populateListView() {
+//    public void saveList(View view) {
+//        try {
 //
-//        ArrayList<Bookmark> arrayPeople = new ArrayList<Bookmark>();
+//            OutputStreamWriter out = new OutputStreamWriter(openFileOutput("TextFile", MODE_APPEND));
+//            //EditText ET = (EditText)findViewById(R.id.editText);
+//            String text = "hello world";
+//            out.write(text);
+//            out.write('\n');
+//            out.close();
+//            Toast.makeText(this, "The contents are saved in the file.", Toast.LENGTH_LONG).show();
 //
-//        Bookmark person1 = new Bookmark("Alex", 1);
-//        Bookmark person2 = new Bookmark("Laura", 3);
-//        Bookmark person3 = new Bookmark("John", 2);
-//        Bookmark person4 = new Bookmark("Tom", 5);
+//        } catch (Throwable t) {
 //
-//        arrayPeople.add(person1);
-//        arrayPeople.add(person2);
-//        arrayPeople.add(person3);
-//        arrayPeople.add(person4);
+//            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
 //
-//        ListView listV = (ListView) findViewById(R.id.listView);
-//        ListBookmarkAdapter adapter = new ListBookmarkAdapter(this, arrayPeople);
-//        listV.setAdapter(adapter);
+//        }
+//        //Toast.makeText(this, "Save not implemented yet.", Toast.LENGTH_SHORT).show();
 //    }
+
+    public String readFileInEditor() {
+        try {
+            InputStream in = openFileInput(STORETEXT);
+            if (in != null) {
+                InputStreamReader tmp = new InputStreamReader(in);
+                BufferedReader reader = new BufferedReader(tmp);
+                String str;
+                StringBuilder buf = new StringBuilder();
+                while ((str = reader.readLine()) != null) {
+                    buf.append(str);
+                }
+
+                if (!buf.toString().equals("")) {
+                    Toast.makeText(this, "File loaded", Toast.LENGTH_LONG).show(); //to be changed
+                    //Toast.makeText(this, buf.toString(), Toast.LENGTH_LONG).show();
+                    return buf.toString();
+                }
+                in.close();
+            }
+
+            return "";
+        } catch (java.io.FileNotFoundException e) {
+            Toast.makeText(this, "There is no file to load", Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+        }
+        return "";
+    }
+
+    public ArrayList<Bookmark> stringToArrayList(String str) {
+        ArrayList<Bookmark> loadedList = new ArrayList<Bookmark>();
+        if ((!str.equals("")) && !str.equals(null)) {
+            String[] strList = str.split(Pattern.quote("||"));
+            String[] strBookmark;
+            for (int i = 0; i < strList.length; i++) {
+                strBookmark = strList[i].split(Pattern.quote("|"));
+                //Bookmark bookmark = new Bookmark(strBookmark[0],strBookmark[1]);
+                loadedList.add(new Bookmark(strBookmark[0], strBookmark[1], strBookmark[2]));
+            }
+        }
+        return loadedList;
+    }
+
+    public void saveList(View v) {
+        String strBMList = "";
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(STORETEXT, 0));
+            for (int i = 0; i < arrayBookmarks.size(); i++) {
+                //TODO: remember to add line number and bookmark label when ready
+                strBMList += arrayBookmarks.get(i).getLabel() + "|" + arrayBookmarks.get(i).getMasechet() + "|" + arrayBookmarks.get(i).getPage();
+                if (i < arrayBookmarks.size() - 1) {
+                    strBMList += "||";
+                }
+            }
+            out.write(strBMList);
+            out.close();
+            Toast.makeText(this, "The contents are saved in the file.", Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+
+        }
+
+    }
 }
 

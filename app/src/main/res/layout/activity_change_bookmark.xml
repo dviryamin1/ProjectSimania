@@ -16,7 +16,8 @@
         android:text="מסכת"
         android:id="@+id/textView3"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="64dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,8 +25,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="דף"
         android:id="@+id/textView4"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/textView3"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,7 +35,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="[masechet name]"
         android:id="@+id/masechetNameTV"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/textView3"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -42,24 +44,25 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="[sheet number]"
         android:id="@+id/sheetNumTV"
-        android:layout_alignTop="@+id/textView4"
-        android:layout_alignStart="@+id/masechetNameTV"
-        android:layout_alignEnd="@+id/masechetNameTV" />
+        android:layout_below="@+id/masechetNameTV"
+        android:layout_alignParentStart="true" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sheetSpinner"
-        android:layout_below="@+id/sheetNumTV"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:contextClickable="false" />
+        android:contextClickable="false"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/sheetNumTV"
+        android:layout_alignParentRight="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="מחק סימנייה"
         android:id="@+id/deleteBtn"
+        android:onClick="deleteBookmark"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
@@ -69,6 +72,7 @@
         android:layout_height="wrap_content"
         android:text="ביטול"
         android:id="@+id/cancelBtn"
+        android:onClick="cancel"
         android:layout_above="@+id/deleteBtn"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
@@ -88,21 +92,40 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/changeBtn"
-        android:layout_below="@+id/sheetSpinner">
+        android:layout_below="@+id/sheetSpinner"
+        android:id="@+id/rg">
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="עא"
-            android:id="@+id/radioButton3"
-            android:checked="true"
+            android:id="@+id/pageA"
+            android:checked="false"
             android:singleLine="true" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="עב"
-            android:id="@+id/radioButton4" />
+            android:id="@+id/pageB" />
     </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="שם"
+        android:id="@+id/textView5"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/textView5"
+        android:singleLine="true" />
 
 </RelativeLayout>
