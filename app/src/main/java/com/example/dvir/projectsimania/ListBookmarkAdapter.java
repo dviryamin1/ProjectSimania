@@ -52,7 +52,7 @@ public class ListBookmarkAdapter extends BaseAdapter {
         ArrayList<String> values = new ArrayList<String>();
 
         for (int i = 0; i < this.getCount(); i++) {
-            values.add(listMasechet.get(i).getMasechet() + "|" + listMasechet.get(i).getMasechet() + "|" + listMasechet.get(i).getPage());
+            values.add(listMasechet.get(i).getLabel() + "|" + listMasechet.get(i).getMasechet() + "|" + listMasechet.get(i).getMasechet() + "|" + listMasechet.get(i).getPage());
         }
         String[] array = values.toArray(new String[values.size()]);
         return array;
